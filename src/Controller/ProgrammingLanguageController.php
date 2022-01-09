@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LanguagePartRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,8 +21,15 @@ class ProgrammingLanguageController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
+    #[Route('/api/language', name: 'api_lan')]
+    public function index(Request $request,ProgrammingLanguageRepository $programming_language_repository): Response
+    {
+       
+        return $this->json($programming_language_repository->findAll());
+    }
+
     #[Route('/api/language/{lang}', name: 'api_language')]
-    public function index(Request $request,string $lang,ProgrammingLanguageRepository $programming_language_repository): Response
+    public function lang(Request $request,string $lang,ProgrammingLanguageRepository $programming_language_repository): Response
     {
         // dump($request);
         // dump($lang);

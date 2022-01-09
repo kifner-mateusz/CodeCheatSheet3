@@ -3,13 +3,27 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\ProgrammingLanguageController;
 use App\Repository\ProgrammingLanguageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProgrammingLanguageRepository::class)]
-#[ApiResource]
+#[ApiResource(itemOperations: [
+    'get',
+    // 'post',
+    'put',
+    'delete',
+    'patch',
+    // 'get_languages' => [
+    //     'method' => 'get',
+    //     'path' => '/languange',
+    //     'controller' => ProgrammingLanguageController::class,
+    
+    // ]
+]
+)]
 class ProgrammingLanguage
 {
     #[ORM\Id]
