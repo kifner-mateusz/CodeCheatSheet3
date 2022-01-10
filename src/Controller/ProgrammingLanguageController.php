@@ -12,6 +12,7 @@ use App\Repository\ProgrammingLanguageRepository;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
 #[AsController]
 class ProgrammingLanguageController extends AbstractController
 {
@@ -23,51 +24,61 @@ class ProgrammingLanguageController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
-    #[Route('/api/languages.{_format}', name: 'api_languages_get',format:"json",methods: ['GET'],defaults:[
-                 "_api_resource_class" =>ProgrammingLanguage::class,
-                 "_api_item_operation_name"=>"api_languages_get"
-             ])]
+    #[Route('/api/languages.{_format}', name: 'api_languages_get',format:"json",methods: ['GET'])]
+    /**
+     * @param Request $request
+     * @return Response 
+    */
     public function index(Request $request,ProgrammingLanguageRepository $programming_language_repository): Response
     {
     //    dump($request);
         return $this->json($programming_language_repository->findAll());
     }
 
-    #[Route('/api/languages/{lang}.{_format}', name: 'api_languages_get_language_parts',format:"json",methods: ['GET'],defaults:[
-        "_api_resource_class" =>ProgrammingLanguage::class,
-        "_api_item_operation_name"=>"api_languages_get_language_parts"
-    ])]
+    #[Route('/api/languages/{lang}.{_format}', name: 'api_languages_get_language_parts',format:"json",methods: ['GET'])]
+    
+    /**
+     * @param Request $request
+     * @param string $lang
+     * @return Response 
+    */
     public function lang(Request $request,string $lang,ProgrammingLanguageRepository $programming_language_repository): Response
     {
-        dump($request);
-        // dump($lang);
-        // $em = $this->doctrine->getManager();;
-        $lang = $programming_language_repository->findOneBy(['name'=>$lang]);
+
+        $lang_data = $programming_language_repository->findOneBy(['name'=>$lang]);
+        if (!$lang_data){
+            return $this->json(["message"=>"not found"],404);
+        }
         $parts = [];
-        foreach($lang->getParts() as $part) {
+        foreach($lang_data->getParts() as $part) {
             
             array_push($parts,$part);
-            // foreach($part->getFields() as $field) {
-            // }
-            // $fields = array_merge($fields,$part->getFields());
+
         }
         return $this->json($parts);
     }
 
-    #[Route('/api/languages/{lang}/{part}.{_format}', name: 'api_languages_get_language_fields',format:"json",methods: ['GET'],defaults:[
-        "_api_resource_class" =>ProgrammingLanguage::class,
-        "_api_item_operation_name"=>"api_languages_get_language_fields"
-    ])]
+    #[Route('/api/languages/{lang}/{part}.{_format}', name: 'api_languages_get_language_fields',format:"json",methods: ['GET'])]
+    /**
+     * @param string $lang
+     * @param string $part
+     * @return Response 
+    */
     public function part(Request $request,string $lang,string $part,LanguagePartRepository $language_part_repository,ProgrammingLanguageRepository $programming_language_repository): Response
     {
-        // dump($request);
-        // dump($lang);
-        // $em = $this->doctrine->getManager();;
-        $lang = $programming_language_repository->findOneBy(['name'=>$lang]);
-        $part = $language_part_repository->findOneBy(['name'=>$part,'programming_language'=>$lang->getId()]);
-        // dump($part);
+        if (!$lang){
+            return $this->json(["message"=>"invalid request"],403);
+        }
+        $lang_data = $programming_language_repository->findOneBy(['name'=>$lang]);
+        if (!$lang_data){
+            return $this->json(["message"=>"not found"],404);
+        }
+        $part_data = $language_part_repository->findOneBy(['name'=>$part,'programming_language'=>$lang_data->getId()]);
+        if (!$part_data){
+            return $this->json(["message"=>"not found"],404);
+        }
         $fields = [];
-        foreach($part->getFields() as $field) {
+        foreach($part_data->getFields() as $field) {
             array_push($fields,$field);
         }
         return $this->json($fields);

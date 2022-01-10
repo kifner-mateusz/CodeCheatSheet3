@@ -14,8 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
     "get",
     "post" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
     "api_languages_get" => ["route_name"=>"api_languages_get"],
-    "api_languages_get_language_parts" => ["route_name"=>"api_languages_get_language_parts"],
-    "api_languages_get_language_fields" => ["route_name"=>"api_languages_get_language_fields"]
+    
 
 ],
 itemOperations: [
@@ -23,9 +22,11 @@ itemOperations: [
     "put" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
     'delete' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
     'patch' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"] ,
+    "api_languages_get_language_parts" => ["route_name"=>"api_languages_get_language_parts"],
+    "api_languages_get_language_fields" => ["route_name"=>"api_languages_get_language_fields"]
     ]
 
-)]
+,attributes: ["pagination_enabled" => false])]
 class ProgrammingLanguage
 {
     #[ORM\Id]
