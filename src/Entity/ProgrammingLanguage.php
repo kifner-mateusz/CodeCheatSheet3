@@ -10,19 +10,17 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProgrammingLanguageRepository::class)]
-#[ApiResource(itemOperations: [
+#[ApiResource(collectionOperations: [
+    "get",
+    "post" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+],
+itemOperations: [
     'get',
-    // 'post',
-    'put',
-    'delete',
-    'patch',
-    // 'get_languages' => [
-    //     'method' => 'get',
-    //     'path' => '/languange',
-    //     'controller' => ProgrammingLanguageController::class,
-    
-    // ]
-]
+    "put" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+    'delete' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+    'patch' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"] ,
+    ]
+
 )]
 class ProgrammingLanguage
 {

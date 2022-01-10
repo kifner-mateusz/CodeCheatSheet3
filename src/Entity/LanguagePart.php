@@ -9,7 +9,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LanguagePartRepository::class)]
-#[ApiResource]
+#[ApiResource(collectionOperations: [
+    "get",
+    "post" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+],
+itemOperations: [
+    'get',
+    "put" => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+    'delete' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"],
+    'patch' => ["security" => "is_granted('IS_AUTHENTICATED_FULLY')"] ,
+    ]
+
+)]
 class LanguagePart
 {
     #[ORM\Id]

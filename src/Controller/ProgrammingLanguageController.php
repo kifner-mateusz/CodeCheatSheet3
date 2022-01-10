@@ -21,14 +21,14 @@ class ProgrammingLanguageController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
-    #[Route('/api/language', name: 'api_lan')]
+    #[Route('/api/languages.{_format}', name: 'api_lan',format:"json")]
     public function index(Request $request,ProgrammingLanguageRepository $programming_language_repository): Response
     {
        
         return $this->json($programming_language_repository->findAll());
     }
 
-    #[Route('/api/language/{lang}', name: 'api_language')]
+    #[Route('/api/language/{lang}.{_format}', name: 'api_language',format:"json")]
     public function lang(Request $request,string $lang,ProgrammingLanguageRepository $programming_language_repository): Response
     {
         // dump($request);
@@ -46,7 +46,7 @@ class ProgrammingLanguageController extends AbstractController
         return $this->json($parts);
     }
 
-    #[Route('/api/language/{lang}/{part}', name: 'api_language_part')]
+    #[Route('/api/language/{lang}/{part}.{_format}', name: 'api_language_part',format:"json")]
     public function part(Request $request,string $lang,string $part,LanguagePartRepository $language_part_repository,ProgrammingLanguageRepository $programming_language_repository): Response
     {
         // dump($request);
