@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\ProgrammingLanguage;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\LanguagePartRepository;
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProgrammingLanguageRepository;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[AsController]
 class ProgrammingLanguageController extends AbstractController
 {
 
@@ -21,17 +23,23 @@ class ProgrammingLanguageController extends AbstractController
         $this->doctrine = $doctrine;
     }
 
-    #[Route('/api/languages.{_format}', name: 'api_lan',format:"json")]
+    #[Route('/api/languages.{_format}', name: 'api_languages_get',format:"json",methods: ['GET'],defaults:[
+                 "_api_resource_class" =>ProgrammingLanguage::class,
+                 "_api_item_operation_name"=>"api_languages_get"
+             ])]
     public function index(Request $request,ProgrammingLanguageRepository $programming_language_repository): Response
     {
-       
+    //    dump($request);
         return $this->json($programming_language_repository->findAll());
     }
 
-    #[Route('/api/language/{lang}.{_format}', name: 'api_language',format:"json")]
+    #[Route('/api/languages/{lang}.{_format}', name: 'api_languages_get_language_parts',format:"json",methods: ['GET'],defaults:[
+        "_api_resource_class" =>ProgrammingLanguage::class,
+        "_api_item_operation_name"=>"api_languages_get_language_parts"
+    ])]
     public function lang(Request $request,string $lang,ProgrammingLanguageRepository $programming_language_repository): Response
     {
-        // dump($request);
+        dump($request);
         // dump($lang);
         // $em = $this->doctrine->getManager();;
         $lang = $programming_language_repository->findOneBy(['name'=>$lang]);
@@ -46,7 +54,10 @@ class ProgrammingLanguageController extends AbstractController
         return $this->json($parts);
     }
 
-    #[Route('/api/language/{lang}/{part}.{_format}', name: 'api_language_part',format:"json")]
+    #[Route('/api/languages/{lang}/{part}.{_format}', name: 'api_languages_get_language_fields',format:"json",methods: ['GET'],defaults:[
+        "_api_resource_class" =>ProgrammingLanguage::class,
+        "_api_item_operation_name"=>"api_languages_get_language_fields"
+    ])]
     public function part(Request $request,string $lang,string $part,LanguagePartRepository $language_part_repository,ProgrammingLanguageRepository $programming_language_repository): Response
     {
         // dump($request);
